@@ -1,6 +1,7 @@
 package harper.com.flexister.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +23,11 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
+import harper.com.flexister.DetailActivity;
 import harper.com.flexister.R;
 import harper.com.flexister.models.Movie;
 /**
@@ -70,7 +75,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
+        RelativeLayout container;
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
@@ -82,9 +87,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster = itemView.findViewById(R.id.ivPoster);
             pbImage = itemView.findViewById(R.id.pbImage);
+            container = itemView.findViewById(R.id.container);
         }
 
-        public void bind(Movie movie) {
+        public void bind(final Movie movie) {
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
             String imageUrl;
@@ -115,6 +121,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                         }
                     })
                     .into(ivPoster);
+
+            container.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    //Toast.makeText(context, movie.getTitle(), Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(context, DetailActivity.class);
+                    i.putExtra("title", movie.getTitle());
+                    i.putExtra("movie", Parcels.wrap(movie));
+                    context.startActivity(i);
+
+                }
+            });
         }
 //
     }
