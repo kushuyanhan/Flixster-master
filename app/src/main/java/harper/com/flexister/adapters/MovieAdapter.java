@@ -75,17 +75,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        RelativeLayout container;
+
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
+        ImageView ivPlay;
         ProgressBar pbImage;
+        RelativeLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster = itemView.findViewById(R.id.ivPoster);
+            ivPlay = itemView.findViewById(R.id.ivPlay);
             pbImage = itemView.findViewById(R.id.pbImage);
             container = itemView.findViewById(R.id.container);
         }
@@ -104,7 +107,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                 imageUrl = movie.getPosterPath();
             }
 
-            Glide.with(context).load(imageUrl).into(ivPoster);
             Glide.with(context)
                     .load(imageUrl)
                     .listener(new RequestListener<Drawable>() {
@@ -122,17 +124,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                     })
                     .into(ivPoster);
 
+            if (movie.getRating() >= 5) {
+                ivPlay.setVisibility(View.VISIBLE);
+            }
+
+            // register click listener on the whole row
             container.setOnClickListener(new View.OnClickListener() {
+                @Override
                 public void onClick(View v) {
-                    //Toast.makeText(context, movie.getTitle(), Toast.LENGTH_SHORT).show();
+                    // navigate to a new activity on tap
                     Intent i = new Intent(context, DetailActivity.class);
                     i.putExtra("title", movie.getTitle());
                     i.putExtra("movie", Parcels.wrap(movie));
                     context.startActivity(i);
-
                 }
             });
         }
-//
     }
 }
